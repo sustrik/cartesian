@@ -32,3 +32,129 @@ The output looks like this:
   { a: 0, b: 2, c: 'A' },
   { a: 0, b: 2, c: 'B' } ]
 ```
+
+Let's now try to define a real-world configuration for a test suite. We can start by describing the boxes we have in our machine fleet:
+
+```javascript
+var box1 = {
+    hostname: 'box1',
+    os: 'linux',
+    arch: 'x86-64',
+    ram: 8,
+}
+
+var box2 = {
+    hostname: 'box2',
+    os: 'freebsd',
+    arch: 'arm',
+    ram: 16,
+}
+
+var box3 = {
+    hostname: 'box3',
+    os: 'windows',
+    arch: 'x86-64',
+    ram: 4,
+}
+
+var box4 = {
+    hostname: 'box4',
+    os: 'illumos',
+    arch: 'sparc',
+    ram: 4,
+}
+```
+
+Here's the definition of the compilers:
+
+```javascript
+var gcc = {
+    binary: 'gcc',
+    version: '4.8.4',
+}
+
+var clang = {
+    binary: 'clang',
+    version: '3.4.1',
+}
+
+var msvc = {
+    binary: 'cl.exe',
+    version: '15.00.30729.01',
+}
+```
+
+And finally, definitions of individual tests:
+
+```javascript
+var frobnicate = {
+    binary: 'frobnicate',
+    sources: 'frobnicate.c'
+}
+
+var loadtest = {
+    binary: 'loadtest',
+    sources: 'loadtest.c helper.c'
+}
+
+var end2end = {
+    binary: 'end2end',
+    sources: 'end2end.c helper.c'
+}
+```
+
+Now we can combine all these dimensions into a single configuration:
+
+```javascript
+var testsuite = {
+    box: c.alt(box1, box2, box3, box4),
+    compiler: c.alt(gcc, clang, msvc),
+    test: c.alt(frobnicate, loadtest, end2end),
+}
+
+var config = c.expand(testsuite)
+console.log(JSON.stringify(c.expand(config), null, '  '))
+```
+
+The result is cartesian product of all the boxes, compilers and tests:
+
+```
+[
+  {
+    "box": {
+      "hostname": "box1",
+      "os": "linux",
+      "arch": "x86-64",
+      "ram": 8
+    },
+    "compiler": {
+      "binary": "gcc",
+      "version": "4.8.4"
+    },
+    "test": {
+      "binary": "frobnicate",
+      "sources": "frobnicate.c"
+    }
+  },
+
+  ...
+
+  {
+    "box": {
+      "hostname": "box4",
+      "os": "illumos",
+      "arch": "sparc",
+      "ram": 4
+    },
+    "compiler": {
+      "binary": "cl.exe",
+      "version": "15.00.30729.01"
+    },
+    "test": {
+      "binary": "end2end",
+      "sources": "end2end.c helper.c"
+    }
+  }
+]
+```
+
