@@ -253,3 +253,20 @@ var msvc = {
 }
 msvc.__proto__ = compiler
 ```
+
+But wait a second. MSVC works only on Windows. How are we supposed to get rid of the unwanted configations for MSVC-bases tests on non-Window platforms? To do this kind of stuff, Cartesian recognizes special object property called 'is'. If it evaluates to true the object will make it into the result. It it evaluates to false the object will be discarded:
+
+```javascript
+var testsuite = {
+
+    ...
+
+    get is() {
+        if(this.compiler.binary == 'cl.exe' && this.box.os != 'windows') return false
+        return true
+    }
+}
+```
+
+And that's all, folks. Cartesian can be used to produce for tests in a test suite, bunch of processes running on a machine, bunch of machines running in a clster and so on. Enjoy!
+
