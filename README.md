@@ -26,7 +26,7 @@ console.log(c.expand(obj))
 
 The output looks like this:
 
-```json
+```
 [ { a: 0, b: 1, c: 'A' },
   { a: 0, b: 1, c: 'B' },
   { a: 0, b: 2, c: 'A' },
