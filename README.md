@@ -1,6 +1,6 @@
 # Cartesian - generator for complex configurations
 
-There's a specific subset of problems in IT industry that have big and somewhat regular domains, but not fully so.
+There's a specific subset of problems in IT industry that have to do with big and somewhat regular domains, but not fully so.
 
 Consider the task of configuring a test suite. You have a fleet of different boxes, with different processors, different operating systems, different compilers, you want to run different tests and to do so with different compile-time and run-time options.
 
