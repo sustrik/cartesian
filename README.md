@@ -116,7 +116,7 @@ var config = c.expand(testsuite)
 console.log(JSON.stringify(c.expand(config), null, '  '))
 ```
 
-The result is cartesian product of all the boxes, compilers and tests:
+The result is cartesian product of all the boxes, compilers and tests. There's a lot of results, so let's have a look only at the first and the laster one:
 
 ```
 [
@@ -158,3 +158,98 @@ The result is cartesian product of all the boxes, compilers and tests:
 ]
 ```
 
+One important thing to realize is that we can calculate new properties using classic JavaScript getter syntax. We may, for example, want a property that would contain the command line to run the test:
+
+```javascript
+var testsuite = {
+    box: c.alt(box1, box2, box3, box4),
+    compiler: c.alt(gcc, clang, msvc),
+    test: c.alt(frobnicate, loadtest, end2end),
+    get cmdline() {
+        return this.compiler.binary + ' ' + this.test.sources + ' -o ' + this.test.binary
+    }
+}
+```
+
+The resulting configuration objects look like this:
+
+```
+{
+  "box": {
+    "hostname": "box1",
+    "os": "linux",
+    "arch": "x86-64",
+    "ram": 8
+  },
+  "compiler": {
+    "binary": "gcc",
+    "version": "4.8.4"
+  },
+  "test": {
+    "binary": "loadtest",
+    "sources": "loadtest.c helper.c"
+  },
+  "cmdline": "gcc loadtest.c helper.c -o loadtest"
+}
+```
+
+But wait! MSVC doesn't recognize -o option. We should use /Fe option instead. Let's do it be defining the option name in the compiler object:
+
+```javascript
+var gcc = {
+    binary: 'gcc',
+    version: '4.8.4',
+    output_option: '-o',
+}
+
+var clang = {
+    binary: 'clang',
+    version: '3.4.1',
+    output_option: '-o',
+}
+
+var msvc = {
+    binary: 'cl.exe',
+    version: '15.00.30729.01',
+    output_option: '/Fe',
+}
+
+...
+
+var testsuite = {
+    box: c.alt(box1, box2, box3, box4),
+    compiler: c.alt(gcc, clang, msvc),
+    test: c.alt(frobnicate, loadtest, end2end),
+    get cmdline() {
+        return this.compiler.binary + ' ' + this.test.sources + ' ' +
+            this.compiler.output_option + ' ' + this.test.binary
+    }
+}
+```
+
+Assuming that we will be adding more option names to compiler objects later on, it will be probably better to use a bit of inheritance and have all the options that are same for gcc and clang in the base class and overload them only for MSVC. This can be done using classic JavaScript inheritance:
+
+```javascript
+var compiler = {
+    output_option: '-o',
+}
+
+var gcc = {
+    binary: 'gcc',
+    version: '4.8.4',
+}
+gcc.__proto__ = compiler
+
+var clang = {
+    binary: 'clang',
+    version: '3.4.1',
+}
+clang.__proto__ = compiler
+
+var msvc = {
+    binary: 'cl.exe',
+    version: '15.00.30729.01',
+    output_option: '/Fe',
+}
+msvc.__proto__ = compiler
+```
