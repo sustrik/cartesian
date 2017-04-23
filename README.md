@@ -274,5 +274,5 @@ var testsuite = {
 }
 ```
 
-And that's all, folks. Cartesian can be used to produce for tests in a test suite, bunch of processes running on a machine, bunch of machines running in a clster and so on. Enjoy!
+And that's all, folks. Cartesian can be used to produce for tests in a test suite, bunch of processes running on a machine, bunch of machines running in a cluster and so on. Enjoy!
 
