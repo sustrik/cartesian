@@ -2,11 +2,11 @@
 
 There's a specific subset of problems in IT industry that have big and somewhat regular domains, but not fully so.
 
-Consider the task of configuring a test suite. You have a fleet of different boxes, with different processors, different operating systems, different compilers, you want to run different tests and do so with different compile-time and run-time options.
+Consider the task of configuring a test suite. You have a fleet of different boxes, with different processors, different operating systems, different compilers, you want to run different tests and to do so with different compile-time and run-time options.
 
 In theory, the test suite would be a perfectly regular N-dimensional matrix featuring all the dimensions mentioned above. But that's where the complexity kicks in: Oh! MSVC only works on Windows! Test X requires 8G of memory and the box Y only has 4G available. Shared libraries have .so extension on Linux, .dll extension on Windows and .dylib extension on OSX. I need to switch on valgrind for test X an box Y temporarily to debug a problem. Support for SPARC in our preferred version of LLVM doesn't quite work yet. We need to use older version of LLVM on SPARC plarforms. And so on and so on.
 
-Trying to address this complexity by hand results in a big mess. Trying to address it via inheritance hieratchy doesn't work well either: Different dimensions don't aggregate in classic inheritance hierarchies, rather, they are composed in each-with-each combinatorial manner.
+Trying to address this complexity by hand results in a big mess. Trying to address it via inheritance hierarchies doesn't work well either: Different dimensions don't aggregate in classic inheritance hierarchies, rather, they are composed in each-with-each combinatorial manner.
 
 ![](matrix.png)
 
@@ -22,6 +22,12 @@ var obj = {
 }
 
 console.log(c.expand(obj))
+```
+
+Call the file `example.js` and exexute it using Node:
+
+```
+$ node example.js
 ```
 
 The output looks like this:
@@ -254,7 +260,7 @@ var msvc = {
 msvc.__proto__ = compiler
 ```
 
-But wait a second. MSVC works only on Windows. How are we supposed to get rid of the unwanted configations for MSVC-bases tests on non-Window platforms? To do this kind of stuff, Cartesian recognizes special object property called 'is'. If it evaluates to true the object will make it into the result. It it evaluates to false the object will be discarded:
+Now it turns out there is a problem: Load test requires at least 8GB of memory and so it fails on boxes 3 and 4. But how are we supposed to get rid of the unwanted tests? To do this kind of stuff, Cartesian recognizes special object property called 'is'. If it evaluates to true the object will make it into the result. It it evaluates to false the object will be discarded:
 
 ```javascript
 var testsuite = {
@@ -262,7 +268,7 @@ var testsuite = {
     ...
 
     get is() {
-        if(this.compiler.binary == 'cl.exe' && this.box.os != 'windows') return false
+        if(this.test.binary == 'loadtest' && this.box.ram < 8) return false
         return true
     }
 }

@@ -76,7 +76,7 @@ var testsuite = {
             this.compiler.output_option + ' ' + this.test.binary
     },
     get is() {
-        if(this.compiler.binary == 'cl.exe' && this.box.os != 'windows') return false
+        if(this.test.binary == 'loadtest' && this.box.ram < 8) return false
         return true
     }
 }
