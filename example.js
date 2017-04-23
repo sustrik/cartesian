@@ -82,5 +82,5 @@ var testsuite = {
 }
 
 var config = c.expand(testsuite)
-console.log(JSON.stringify(c.expand(config), null, '  '))
+console.log(JSON.stringify(config, null, '  '))
 

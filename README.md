@@ -119,7 +119,7 @@ var testsuite = {
 }
 
 var config = c.expand(testsuite)
-console.log(JSON.stringify(c.expand(config), null, '  '))
+console.log(JSON.stringify(config, null, '  '))
 ```
 
 The result is cartesian product of all the boxes, compilers and tests. There's a lot of results, so let's have a look only at the first and the laster one:
