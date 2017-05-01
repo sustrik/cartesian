@@ -76,8 +76,7 @@ var testsuite = {
             this.compiler.output_option + ' ' + this.test.binary
     },
     get is() {
-        if(this.test.binary == 'loadtest' && this.box.ram < 8) return false
-        return true
+        return !(this.test.binary == 'loadtest' && this.box.ram < 8)
     }
 }
 
