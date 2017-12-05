@@ -56,7 +56,7 @@ function expand(expr) {
     res = [{}]
     for(var name in expr) {
         // find the property descriptor, even if it is in a base class
-        for(it = expr; it != null; it = it.__proto__) {
+        for(var it = expr; it != null; it = it.__proto__) {
             var desc = Object.getOwnPropertyDescriptor(it, name)
             if(desc != undefined) break
         }
